@@ -1,15 +1,18 @@
 <template>
     <div class="onemap-page">
-        <mapview />
+        <Mapview />
+        <MapTools />
     </div>
 </template>
 
 <script>
 import Mapview from './../components/common/Mapview';
+import MapTools from './../components/MapTools';
 export default {
     name: 'OneMap',
     components: {
         Mapview,
+        MapTools,
     },
 
     methods: {},

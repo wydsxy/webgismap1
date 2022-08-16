@@ -4,22 +4,23 @@ import Vuex from 'vuex';
 Vue.use(Vuex)
 
 const state = {
-  _defaultView: '',
+  _defaultMapView: '',
+  // _defaultView: '4444',   //测试用
 };
 const getters = {
   _getDefaultView() {
-    return state._defaultView;
+    return state._defaultMapView;
   }
 };
 const Mutations = {
   _setDefaultView(state, value) {
-    state._defaultView = value;
+    state._defaultMapView = value;
   }
 };
 
 const store = new Vuex.Store({
   state,
   getters,
-  Mutations,
+  Mutations
 });
 export default store;
