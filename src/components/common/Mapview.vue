@@ -17,7 +17,7 @@ export default {
     name: 'Mapview',
     components: {},
     mounted: function () {
-        console.log(this.$store.state._defaultView);
+        //console.log(this.$store.getters._defaultMapView);
         this._createMapView();
     },
     methods: {
@@ -76,7 +76,7 @@ export default {
             mapView.ui.add(scaleBar);
             mapView.ui.add(zoom);
             mapView.ui.components = []; //去除多余组件
-            this.$store.commit('_setDefaultView', mapView);
+            this.$store.commit('_setDefaultMapView', mapView);
         },
     },
 };
