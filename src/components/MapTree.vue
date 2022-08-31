@@ -1,5 +1,9 @@
 <template>
     <div class="maptree-pannel" v-show="this.$store.getters._getDefaultMapTreeVisible">
+        <div class="maptree-header">
+            <span>图层管理</span>
+            <i class="el-icon-close" @click="closeMapTreePannel"></i>
+        </div>
         <el-tree :data="data" :props="defaultProps" @node-click="handleNodeClick"></el-tree>
     </div>
 </template>
@@ -17,61 +21,57 @@ export default {
         return {
             data: [
                 {
-                    label: '暖色系图层',
-                    layerid: 'layerid',
-                    layerurl: 'http://map.geoq.cn/arcgis/rest/services/ChinaOnlineStreetWarm/MapServer',
+                    label: '底图',
                     children: [
                         {
-                            label: '二级 1-1',
-                            children: [
-                                {
-                                    label: '三级 1-1-1',
-                                },
-                            ],
+                            label: '云南政区',
+                            layerid: 'layerid',
+                            layerurl: 'http://47.113.221.187:6080/arcgis/rest/services/YLGS/YLGS_District/MapServer',
+                        },
+                        {
+                            label: '云南路网',
+                            layerid: 'layerid',
+                            layerurl: 'http://47.113.221.187:6080/arcgis/rest/services/YLGS/YLGS_Route/MapServer',
+                        },
+                        {
+                            label: '云南资产',
+                            layerid: 'layerid',
+                            layerurl: 'http://47.113.221.187:6080/arcgis/rest/services/YLGS/YLGS_AssetPoint/MapServer',
                         },
                     ],
                 },
                 {
-                    label: '一级 2',
+                    label: '行政区划',
+                    // layerid: 'layerid',
+                    //layerurl: 'http://47.113.221.187:6080/arcgis/rest/services/YLGS/YLGS_Route/MapServer',
                     children: [
                         {
-                            label: '二级 2-1',
-                            children: [
-                                {
-                                    label: '灰色系图层',
-                                    layerid: 'layerid',
-                                    layerurl: 'http://map.geoq.cn/arcgis/rest/services/ChinaOnlineStreetGray/MapServer',
-                                },
-                            ],
+                            label: '省级行政区划',
+                            layerid: 'layerid',
+                            layerurl: 'http://192.168.24.29:6080/arcgis/rest/services/Province/MapServer',
                         },
                         {
-                            label: '二级 2-2',
-                            children: [
-                                {
-                                    label: '三级 2-2-1',
-                                },
-                            ],
+                            label: '地市级行政区划',
+                            layerid: 'layerid',
+                            layerurl: 'http://192.168.24.29:6080/arcgis/rest/services/City/MapServer',
+                        },
+                        {
+                            label: '区县级行政区划',
+                            layerid: 'layerid',
+                            layerurl: 'http://192.168.24.29:6080/arcgis/rest/services/County/MapServer',
                         },
                     ],
                 },
                 {
-                    label: '一级 3',
+                    label: '业务数据',
+                    //layerid: 'layerid',
+                    //layerurl: 'http://47.113.221.187:6080/arcgis/rest/services/YLGS/YLGS_AssetPoint/MapServer',
                     children: [
                         {
-                            label: '二级 3-1',
-                            children: [
-                                {
-                                    label: '三级 3-1-1',
-                                },
-                            ],
+                            label: '火车站84',
                         },
                         {
-                            label: '二级 3-2',
-                            children: [
-                                {
-                                    label: '三级 3-2-1',
-                                },
-                            ],
+                            label: '火车站墨卡托',
                         },
                     ],
                 },
@@ -89,11 +89,15 @@ export default {
             if (data.layerurl) {
                 const view = this.$store.getters._getDefaultMapView;
                 const resultLayer = view.map.findLayerById('layerid');
-                if (resultLayer) view.map.remove(resultLayer); //关闭其它图层
-                const [TileLayer] = await loadModules(['esri/layers/TileLayer'], options);
-                const layer = new TileLayer({ url: data.layerurl, id: data.layerid });
+                // if (resultLayer) view.map.remove(resultLayer); //关闭其它图层
+                const [MapImageLayer] = await loadModules(['esri/layers/MapImageLayer'], options);
+                const layer = new MapImageLayer({ url: data.layerurl, id: data.layerid });
                 view.map.add(layer);
             }
+        },
+        closeMapTreePannel() {
+            const currentVisible = this.$store.getters._getDefaultMapTreeVisible;
+            this.$store.commit('_setDefaultMapTreeVisible', !currentVisible);
         },
     },
 };
@@ -107,5 +111,23 @@ export default {
     width: 200px;
     height: 300px;
     background-color: aliceblue;
+}
+.maptree-header {
+    width: 100%;
+    height: 35px;
+    border-bottom: 1px solid #e4e7ed;
+    padding: 0 5px;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: space-between;
+}
+.maptree-header > span {
+    line-height: 35px;
+    font-size: 16px;
+    font-weight: 600;
+}
+.maptree-header > i {
+    line-height: 35px;
+    cursor: pointer;
 }
 </style>
